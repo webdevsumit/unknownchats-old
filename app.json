@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "UnknownChats",
+    "name": "Unknown Chats",
     "slug": "UnknownChats",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "On this application people can chat with others in a college , school, open world ( depends on chosen platform)  without showing their real identity."
   }
 }
