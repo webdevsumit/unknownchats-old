@@ -152,6 +152,9 @@ const Account = ({navigation}) => {
             :
             <View style={styles.mainContainer}>
                 <Text>loading...</Text>
+                <TouchableOpacity  style={styles.logoutButton} onPress={logout}>
+                    <Text style={styles.logoutButtonText}>LOGOUT</Text>
+                </TouchableOpacity>
             </View>
             }
         </View>

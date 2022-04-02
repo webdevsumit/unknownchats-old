@@ -11,39 +11,71 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import Navbar from './../components/navbar';
 import { getData } from '../localStorage';
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import ConfirmDelete from '../components/confirmDelete';
-import { setFakeProfileIdToOpen } from '../redux/states';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 
-const AuthHome = ({navigation}) => {
+const CollegeSelection = ({navigation}) => {
 
     const { baseUrl } = useSelector(state=>state.state);
     const dispatch = useDispatch();
-
+    
     const [data, setData] = useState([]);
+    const [origtinalData, setOrigtinalData] = useState([]);
     const [error, setError] = useState('');
 
     const [search, setSearch] = useState('');
 
-    const searchCollegeFilter = async (keyword)=>{
+    const fetchColleges = async ()=>{
         await axios.get(
-            `https://api.data.gov.in/resource/44bea382-c525-4740-8a07-04bd20a99b52?api-key=579b464db66ec23bdd0000017ff1eeedbf784c764c00093b957334c6&format=json&filters=College%20Name/`,
+            `${baseUrl}getColleges/`,
             {
                 headers: {
                 'Content-Type': "application/json",
                 'Accept': "application/json",
+                'Authorization': `Token ${await getData('token')}` 
                 }  
             }        
         ).then(res=>{
-            setData(res.data.records.filter(record=>record.college_name.toUpperCase().search(keyword)!==-1));
-            
+            if (res.data.status==="success"){
+                setData(res.data.data);
+                setOrigtinalData(res.data.data);
+            }else{
+                setError(res.data.message);
+                console.log(res.data.message);
+            }
         }).catch(err=>console.log(err));
     }
 
+    const setCollege = async (college)=>{
+        await axios.post(
+            `${baseUrl}setCollege/`,
+            {
+                collegeName:college.toUpperCase(),
+            },
+            {
+                headers: {
+                'Content-Type': "application/json",
+                'Accept': "application/json",
+                'Authorization': `Token ${await getData('token')}` 
+                }  
+            }        
+        ).then(res=>{
+            if (res.data.status==="success"){
+                navigation.navigate('UnknownAccountSetup');
+            }else{
+                setError(res.data.message);
+                console.log(res.data.message);
+            }
+        }).catch(err=>console.log(err));
+    }
+
+    const searchCollegeFilter = (keyword)=>{
+        setData(origtinalData.filter(record=>record.collegeName.toUpperCase().search(keyword.toUpperCase())>-1));
+    }
+
     useEffect(()=>{
-        fetchFakeProfiles();
+        fetchColleges();
     },[]);
 
     return(
@@ -58,27 +90,46 @@ const AuthHome = ({navigation}) => {
                                 value={search}
                                 onChange={({ nativeEvent: { eventCount, target, text} })=>{
                                     setSearch(text);
-                                    if (text.length>5){
-                                        searchCollegeFilter(text);
-                                    }
+                                    searchCollegeFilter(text);
                                 }}
-                                placeholder="Search by college name"
+                                placeholder="Search by college name or use short name ex. BU"
                             />
                         </View>
                     </View>
                 </View>
                 <ScrollView contentContainerStyle={{...styles.buttonsContainer}}>
+                    {data.length===0 && <>
+                        <Text style={{...styles.buttonText, fontSize:10}}>Please try to avoid duplicates.</Text>
+
+                        <View style={styles.buttonView}>
+                            <View style={{...styles.buttonProfile, backgroundColor:"#DDDDDD"}}>
+                                <TouchableOpacity onPress={()=>{
+                                    setCollege(search);
+                                    }}>
+                                    <View style={{...styles.button, justifyContent: "center"}}>
+                                        <Ionicons name="add" size={24} color="black" />
+                                        <Text style={{...styles.buttonText, fontWeight:"bold"}}>Add This College Name</Text>
+                                    </View>
+                                            
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </>}
                 {data.map((college)=>{
                     return(
-                        <View key={college.s_no} style={styles.buttonView}>
+                        <View key={college.id} style={styles.buttonView}>
                             <View style={styles.buttonProfile}>
                                 <TouchableOpacity onPress={()=>{
-                                    setCollege(college.college_name);
-                                    navigation.navigate('UnknownAccountSetup');
+                                    setCollege(college.collegeName);
                                     }}>
                                     <View style={styles.button}>
-                                        <Text style={styles.buttonText}>{college.college_name}</Text>
+                                        <Text style={styles.buttonText}>{college.collegeName}</Text>
+                                        <View style={styles.member}>
+                                            <MaterialCommunityIcons name="account-multiple" size={24} color="black" />
+                                            <Text style={{...styles.buttonText, marginLeft: 0, paddingLeft: 2, marginRight:10, fontWeight:"bold"}}>{college.numberOfTimeSelected}</Text>
+                                        </View>
                                     </View>
+                                            
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -90,7 +141,7 @@ const AuthHome = ({navigation}) => {
     )
 }
 
-export default AuthHome;
+export default CollegeSelection;
 
 const styles = StyleSheet.create({
     container: {
@@ -122,9 +173,18 @@ const styles = StyleSheet.create({
       },
     button: {
         flex:1,
+        // width:"100%",
         alignItems: "center",
         flexDirection: "row",
-        // justifyContent: "space-between",
+        justifyContent: "space-between",
+      },
+    member: {
+        // flex:1,
+        // width:"50%",
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        marginLeft:10,
       },
     buttonText: {
         fontSize: 18,

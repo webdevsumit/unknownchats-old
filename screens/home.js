@@ -20,7 +20,7 @@ const Home = ({navigation}) => {
     useEffect(async ()=>{
         username = await getData('username');
         token = await getData('token');
-        if (!!!username && !!!token){
+        if (!!username && !!token){
             dispatch(setIsLogin(true));
             dispatch(setUsername(username));
             navigation.navigate('AuthHome');

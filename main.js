@@ -15,6 +15,9 @@ import PlatformSelection from './screens/platformSelection';
 import AuthHome from './screens/authHome';
 import { useSelector } from 'react-redux';
 import Account from './screens/account';
+import CollegeSelection from './screens/CollegeSelection';
+import UnknownAccountSetup from './screens/UnknownAccountSetup';
+import FakeAccount from './screens/fakeAccount';
 
 // 
 // https://data.gov.in/user/myaccount 579b464db66ec23bdd0000017ff1eeedbf784c764c00093b957334c6
@@ -43,6 +46,9 @@ export default function Main() {
         <>
           <Stack.Screen name="AuthHome" options={{ title: 'Home Main' }} component={AuthHome}/>
           <Stack.Screen name="PlatformSelection" options={{ title: 'Platform Selection' }} component={PlatformSelection}/>
+          <Stack.Screen name="CollegeSelection" options={{ title: 'College Selection' }} component={CollegeSelection}/>
+          <Stack.Screen name="UnknownAccountSetup" options={{ title: 'Ready To Go' }} component={UnknownAccountSetup}/>
+          <Stack.Screen name="FakeAccount" options={{ title: 'Unknown' }} component={FakeAccount}/>
           <Stack.Screen name="Account" component={Account}/>
         </>
         }

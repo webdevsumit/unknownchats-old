@@ -114,7 +114,7 @@ const AuthHome = ({navigation}) => {
                             <View style={styles.buttonProfile}>
                                 <TouchableOpacity onPress={()=>{
                                     dispatch(setFakeProfileIdToOpen(profile.id));
-                                    navigation.navigate('UnknownAccountSetup');
+                                    navigation.navigate('FakeAccount');
                                     }}>
                                     <View style={styles.button}>
                                         <Image style={styles.profilePicture} source={{uri:profile.profilePicture}}/>
