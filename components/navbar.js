@@ -7,21 +7,25 @@ import {
     TouchableOpacity,
     StatusBar,
 } from 'react-native';
+import { useSelector } from 'react-redux';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Navbar = ({navigation}) => {
+
+    const { username } = useSelector(state=>state.state);
 
     return(
         <View style={styles.upperContainer}>
             <View style={styles.navContainer}>
                 <Image style={styles.logo} source={require('./../assets/images/logo.png')}/>
                 <Text style={styles.mainText}>
-                    Unknown Chats
+                   Hello, {username}
                 </Text>
             </View>
             <View style={styles.navContainer}>
-                <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
+                <TouchableOpacity onPress={()=>navigation.navigate('Account')}>
                     <View style={styles.button}>
-                        <Image style={styles.accountLogo} source={require('./../assets/images/account.png')}/>
+                        <MaterialCommunityIcons name="account-circle" size={30} color="black" />
                     </View>
                 </TouchableOpacity>
             </View>
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10,
       borderBottomColor: '#aaa',
-      borderBottomWidth: 2,
+      borderBottomWidth: 0.5,
     },
     navContainer: {
     //   flex: 1,

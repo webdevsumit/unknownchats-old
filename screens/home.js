@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import { 
     View, 
     StyleSheet,
     Text,
     ImageBackground,
+    Platform ,
 } from 'react-native';
 import NormalButton from '../components/normalButton';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIsLogin } from './../redux/states';
-import { getData } from '../localStorage';
+import { setIsLogin, setUsername } from './../redux/states';
+import { getData, clearData } from '../localStorage';
 
 
 const Home = ({navigation}) => {
@@ -18,11 +18,17 @@ const Home = ({navigation}) => {
     const dispatch = useDispatch();
 
     useEffect(async ()=>{
-        user = await getData('username');
+        username = await getData('username');
         token = await getData('token');
-        if (!!!user && !!!token){
+        if (!!!username && !!!token){
             dispatch(setIsLogin(true));
+            dispatch(setUsername(username));
             navigation.navigate('AuthHome');
+        }else{
+            await clearData(Platform.OS);
+            dispatch(setIsLogin(false));
+            dispatch(setUsername(''));
+            navigation.navigate('Home');
         }
     },[]);
     return(

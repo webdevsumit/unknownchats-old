@@ -7,7 +7,7 @@ import {
 import HeroContainer from '../components/heroContainer';
 import UserPassInputs from '../components/userPassInputs';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIsLogin } from './../redux/states';
+import { setIsLogin, setUsername } from './../redux/states';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
@@ -34,6 +34,7 @@ const Login = ({navigation}) => {
                 AsyncStorage.setItem('username',res.data.username);
                 AsyncStorage.setItem('token',res.data.token);
                 dispatch(setIsLogin(true));
+                dispatch(setUsername(res.data.username));
                 navigation.navigate('AuthHome');
             }else{
                 setError(res.data.error);
@@ -50,9 +51,9 @@ const Login = ({navigation}) => {
             placeholder1="Username"
             placeholder2="Password"
             onSubmit={onSubmit}
-            link1Text="Do not have an account? Signup"
+            // link1Text="Do not have an account? Signup"
             link2Text="Forgot Password?"
-            link1Click={()=>navigation.navigate('Signup')}
+            // link1Click={()=>navigation.navigate('Signup')}
             link2Click={()=>navigation.navigate('ForgotPassword')}
             error={error}
             />

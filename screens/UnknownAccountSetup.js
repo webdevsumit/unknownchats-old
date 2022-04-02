@@ -8,9 +8,12 @@ import {
 } from 'react-native';
 import Navbar from '../components/navbar';
 import { getData } from '../localStorage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFakeProfileIdToOpen } from '../redux/states';
 
 const PlatformSelection = ({navigation}) => {
+
+    const dispatch = useDispatch();
 
     const { baseUrl } = useSelector(state=>state.state);
 
@@ -55,6 +58,7 @@ const PlatformSelection = ({navigation}) => {
                 if(platformNumber==="2"){
                     navigation.navigate('CollegeSelection');
                 }else{
+                    dispatch(setFakeProfileIdToOpen(res.data.id));
                     navigation.navigate('UnknownAccountSetup');
                 }
             }else{

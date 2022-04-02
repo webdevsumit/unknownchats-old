@@ -39,9 +39,13 @@ const ForgotPassword = ({navigation}) => {
                     navigation.navigate('Login');
                 },1000);
             }else{
-                setError(res.data.error);
+                setError(res.data.message);
+                setMessage("");
             }
-        }).catch(err=>console.log(err));
+        }).catch(err=>{
+            console.log(err); 
+            setMessage("Failed");
+        });
     }
 
     return(
@@ -56,9 +60,9 @@ const ForgotPassword = ({navigation}) => {
             placeholder1="Username"
             placeholder2="New Password"
             onSubmit={onSubmit}
-            link1Text="Do not have an account? Signup"
-            link2Text="Go to Login"
-            link1Click={()=>navigation.navigate('Signup')}
+            // link1Text="Do not have an account? Signup"
+            link2Text=""
+            // link1Click={()=>navigation.navigate('Signup')}
             link2Click={()=>navigation.navigate('Login')}
             error={error}
             />

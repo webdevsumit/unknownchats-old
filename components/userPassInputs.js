@@ -27,9 +27,9 @@ const UserPassInputs = ({
     return(
         <View  style={styles.lowerContainer}>
             <View  style={styles.loginContainer}>
-                <Text style={styles.subContainer}>
+                {/* <Text style={styles.subContainer}>
                     {headText}
-                </Text>
+                </Text> */}
                 <TextInput
                     style={styles.usenameTextInput}
                     value={username}
@@ -59,11 +59,11 @@ const UserPassInputs = ({
                     </TouchableHighlight>
                 </View>
                 <View style={styles.linkView}>
-                    <TouchableOpacity onPress={link1Click}>
+                    {/* <TouchableOpacity onPress={link1Click}>
                         <View style={styles.link}>
                             <Text style={styles.linkText}>{link1Text}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity onPress={link2Click}>
                         <View style={styles.link}>
                             <Text style={styles.linkText}>{link2Text}</Text>
@@ -86,12 +86,14 @@ const styles = StyleSheet.create({
       width: "100%",
     },
     loginContainer: {
-      backgroundColor: '#7D7D7D',
+      backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
       width: "80%",
     //   height: "80%",
       borderRadius: 20,
+      borderColor:"#aaa",
+    //   borderWidth:1,
     },
     subContainer: {
         fontSize: 28,
@@ -108,6 +110,7 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         padding: 10,
         width: '80%',
+        borderBottomWidth:1,
     },
     button: {
         alignItems: "center",
@@ -134,7 +137,6 @@ const styles = StyleSheet.create({
     linkText: {
         fontSize: 14,
         fontFamily: 'serif',
-        textDecorationLine: 'underline',
         marginBottom: 5,
     },
     error: {

@@ -14,9 +14,9 @@ const HeroContainer = ({}) => {
             <Text style={styles.mainText}>
                 Unknown Chats
             </Text>
-            <Text style={styles.subHeadText}>
-                Chat without showing your real identity
-            </Text>
+            {/* <Text style={styles.subHeadText}>
+                Chat without showing your real identity.
+            </Text> */}
         </View>
     )
 }

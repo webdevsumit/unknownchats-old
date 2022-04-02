@@ -4,7 +4,7 @@ import React, {useState, useEffect } from 'react';
 enableScreens();
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Settings from './screens/Settings';
 import Login from './screens/login';
@@ -14,6 +14,11 @@ import Home from './screens/home';
 import PlatformSelection from './screens/platformSelection';
 import AuthHome from './screens/authHome';
 import { useSelector } from 'react-redux';
+import Account from './screens/account';
+
+// 
+// https://data.gov.in/user/myaccount 579b464db66ec23bdd0000017ff1eeedbf784c764c00093b957334c6
+// 
 
 const Stack = createNativeStackNavigator();
 
@@ -27,16 +32,23 @@ export default function Main() {
           headerShown: Platform.OS === 'ios',
         }}
       >
-        {!isLogin && <Stack.Screen name="Home" component={Home}/>}
-        <Stack.Screen name="AuthHome" options={{ title: 'Home Main' }} component={AuthHome}/>
 
-        {!isLogin && <>
+        {!isLogin?
+        <>
+          <Stack.Screen name="Home" component={Home}/>
           <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="Signup" component={Signup}/>
-          <Stack.Screen name="ForgotPassword" options={{ title: 'Reset Password' }} component={ForgotPassword}/>
-        </>}
+        </>
+        :
+        <>
+          <Stack.Screen name="AuthHome" options={{ title: 'Home Main' }} component={AuthHome}/>
+          <Stack.Screen name="PlatformSelection" options={{ title: 'Platform Selection' }} component={PlatformSelection}/>
+          <Stack.Screen name="Account" component={Account}/>
+        </>
+        }
 
-        <Stack.Screen name="PlatformSelection" options={{ title: 'Platform Selection' }} component={PlatformSelection}/>
+
+        <Stack.Screen name="ForgotPassword" options={{ title: 'Reset Password' }} component={ForgotPassword}/>
         
         <Stack.Screen 
           name="Settings" 

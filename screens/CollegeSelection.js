@@ -4,7 +4,6 @@ import {
     View, 
     StyleSheet,
     Text,
-    Image,
     TouchableOpacity,
     ScrollView,
     TextInput,
@@ -24,74 +23,31 @@ const AuthHome = ({navigation}) => {
     const dispatch = useDispatch();
 
     const [data, setData] = useState([]);
-    const [originalData, setOriginalData] = useState([]);
     const [error, setError] = useState('');
-
-    const [openConfirm, setOpenConfirm] = useState(false);
-    const [toDelete, setToDelete] = useState('');
 
     const [search, setSearch] = useState('');
 
-    const fetchFakeProfiles = async ()=>{
+    const searchCollegeFilter = async (keyword)=>{
         await axios.get(
-            `${baseUrl}getFakeProfiles/`,
+            `https://api.data.gov.in/resource/44bea382-c525-4740-8a07-04bd20a99b52?api-key=579b464db66ec23bdd0000017ff1eeedbf784c764c00093b957334c6&format=json&filters=College%20Name/`,
             {
                 headers: {
                 'Content-Type': "application/json",
                 'Accept': "application/json",
-                'Authorization': `Token ${await getData('token')}` 
                 }  
             }        
         ).then(res=>{
-            if (res.data.status==="success"){
-                setData(res.data.earlierProfiles);
-                setOriginalData(res.data.earlierProfiles);
-            }else{
-                setError(res.data.message);
-                console.log(res.data.message);
-            }
+            setData(res.data.records.filter(record=>record.college_name.toUpperCase().search(keyword)!==-1));
+            
         }).catch(err=>console.log(err));
-    }
-    const deleteFakeProfile = async ()=>{
-        await axios.post(
-            `${baseUrl}deleteFakeProfile/`,
-            {
-                id:toDelete
-            },
-            {
-                headers: {
-                'Content-Type': "application/json",
-                'Accept': "application/json",
-                'Authorization': `Token ${await getData('token')}` 
-                }  
-            }        
-        ).then(res=>{
-            console.log(res.data);
-            if (res.data.status==="success"){
-                setData(data.filter(d=>d.id!==toDelete));
-                setOriginalData(data.filter(d=>d.id!==toDelete));
-            }else{
-                setError(res.data.message);
-            }
-        }).catch(err=>console.log(err));
-        setOpenConfirm(false);
     }
 
     useEffect(()=>{
         fetchFakeProfiles();
     },[]);
 
-    const searchFilter=(text)=>{
-        setSearch(text);
-        setData(originalData.filter(d=>d.displayName.toUpperCase().search(text.toUpperCase())>-1))
-    }
-
     return(
         <View style={styles.container}>
-            {openConfirm && <ConfirmDelete
-                onCancel={()=>setOpenConfirm(false)}
-                onDelete={deleteFakeProfile}
-            />}
             <Navbar navigation={navigation} />
             <View style={{flex:1, width: "100%", marginTop: 70}}>
                 <View style={styles.buttonsContainer}>
@@ -100,43 +56,35 @@ const AuthHome = ({navigation}) => {
                             <TextInput
                                 style={styles.searchTextInput}
                                 value={search}
-                                onChange={({ nativeEvent: { eventCount, target, text} })=>{searchFilter(text)}}
-                                placeholder="Search by profile name"
-                                autoComplete="email"
+                                onChange={({ nativeEvent: { eventCount, target, text} })=>{
+                                    setSearch(text);
+                                    if (text.length>5){
+                                        searchCollegeFilter(text);
+                                    }
+                                }}
+                                placeholder="Search by college name"
                             />
                         </View>
                     </View>
                 </View>
                 <ScrollView contentContainerStyle={{...styles.buttonsContainer}}>
-                {data.map((profile)=>{
+                {data.map((college)=>{
                     return(
-                        <View key={profile.id} style={styles.buttonView}>
+                        <View key={college.s_no} style={styles.buttonView}>
                             <View style={styles.buttonProfile}>
                                 <TouchableOpacity onPress={()=>{
-                                    dispatch(setFakeProfileIdToOpen(profile.id));
+                                    setCollege(college.college_name);
                                     navigation.navigate('UnknownAccountSetup');
                                     }}>
                                     <View style={styles.button}>
-                                        <Image style={styles.profilePicture} source={{uri:profile.profilePicture}}/>
-                                        <Text style={styles.buttonText}>{profile.displayName}</Text>
+                                        <Text style={styles.buttonText}>{college.college_name}</Text>
                                     </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.plusIconContainer} onPress={()=>{setToDelete(profile.id); setOpenConfirm(true)}}>
-                                    <MaterialIcons name="delete" size={24} color="red" />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         )
                     })}
-                    {originalData.length===0 && 
-                        <View style={styles.buttonView}>
-                            <Text style={{...styles.buttonProfile, fontFamily: 'serif'}}>Make your first unknown profile</Text>
-                        </View>
-                    }
                 </ScrollView>
-                <TouchableOpacity style={styles.plusIconContainer} onPress={()=>navigation.navigate('PlatformSelection')}>
-                        <AntDesign name="pluscircle" size={60} color="black" />
-                </TouchableOpacity>
             </View>
         </View>
     )
@@ -183,18 +131,6 @@ const styles = StyleSheet.create({
         // fontWeight: "bold",
         fontFamily: 'serif',
         paddingLeft: 20,
-    },
-    profilePicture:{
-        width:40,
-        height:40,
-        backgroundColor: "#aaa",
-        borderRadius:20,
-    },
-    plusIconContainer:{
-        position:'absolute',
-        bottom: 20,
-        right:20,
-        backgroundColor:"rgba(0,0,0,0)"
     },
     searchTextInput: {
         backgroundColor: '#fff',
