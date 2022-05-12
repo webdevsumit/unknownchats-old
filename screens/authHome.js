@@ -93,7 +93,7 @@ const AuthHome = ({navigation}) => {
                 onDelete={deleteFakeProfile}
             />}
             <Navbar navigation={navigation} />
-            <View style={{flex:1, width: "100%", marginTop: 70}}>
+            <View style={{flex:1, width: "100%", marginTop: 80}}>
                 <View style={styles.buttonsContainer}>
                     <View style={{...styles.buttonView}}>
                         <View style={{...styles.buttonProfile, padding: 0}}>

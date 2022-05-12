@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: 70,
+      height: '10.5%',
       width: "100%",
       flexDirection: 'row',
       paddingTop: StatusBar.currentHeight,

@@ -39,8 +39,7 @@ const UnknownAccountSetup = ({navigation}) => {
     
         if (!result.cancelled) {
             setDisplayImage({
-                name: result.fileName,
-                type: result.type,
+                ...result,
                 uri: Platform.OS === 'ios' ? result.uri.replace('file://', '') : result.uri,
             });
         }
@@ -61,9 +60,11 @@ const UnknownAccountSetup = ({navigation}) => {
                 formData,
                 {
                     headers: {
-                    'Content-Type': "application/json",
-                    'Accept': "application/json",
-                    'Authorization': `Token ${await getData('token')}` 
+                        // 'Content-Type': 'multipart/form-data',
+                        // 'Accept': 'multipart/form-data',
+                        // 'Content-Type': 'application/json',
+                        // 'Accept': "application/json",
+                        'Authorization': `Token ${await getData('token')}` 
                     }  
                 }        
             ).then(res=>{
